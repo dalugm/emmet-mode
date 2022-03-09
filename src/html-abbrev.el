@@ -451,7 +451,7 @@ Return `(,inner-text ,input-without-inner-text) if succeeds, otherwise return
 
 (defun emmet-expand (parent input)
   "Parse an e+ expression, where e is an expandable tag"
-  (let* ((parent-tag (car (cadr parent))))
+  (let ((parent-tag (car (cadr parent))))
     (setf (caadr parent) (concat parent-tag "+"))
     (cl-destructuring-bind (parent . input)
         (emmet-expand-tag-alias parent input)
@@ -779,7 +779,8 @@ Return `(,inner-text ,input-without-inner-text) if succeeds, otherwise return
   (let ((type (car ast)))
     (cond
      ((eq type 'list)
-      (mapconcat (lambda (sub-ast) (emmet-transform-ast sub-ast make-tag-fun))
+      (mapconcat (lambda (sub-ast)
+                   (emmet-transform-ast sub-ast tag-maker))
                  (cadr ast)
                  "\n"))
      ((eq type 'tag)
