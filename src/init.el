@@ -2,16 +2,9 @@
 ;;
 ;;; Code:
 
-(defconst emmet-mode:version "1.0.0")
+(defconst emmet-mode-version "1.0.1")
 
-(with-no-warnings
-  (require 'cl-lib))
-
-;; for portability with < 24.3 EMACS
-(unless (fboundp 'cl-labels) (fset 'cl-labels 'labels))
-(unless (fboundp 'cl-flet)   (fset 'cl-flet   'flet))
-;; < 22.1
-(unless (fboundp 'string-to-number) (fset 'string-to-number 'string-to-int))
+(require 'cl-lib)
 
 (defmacro emmet-defparameter (symbol &optional initvalue docstring)
   `(progn
@@ -50,30 +43,30 @@
 (defmacro emmet-parse (regex nums label &rest body)
   "Parse according to a regex and update the `input' variable."
   `(emmet-aif (emmet-regex ,regex input ',(number-sequence 0 nums))
-                  (let ((input (elt it ,nums)))
-                    ,@body)
-                  `,`(error ,(concat "expected " ,label))))
+              (let ((input (elt it ,nums)))
+                ,@body)
+              `,`(error ,(concat "expected " ,label))))
 
 (defmacro emmet-run (parser then-form &rest else-forms)
   "Run a parser and update the input properly, extract the parsed
    expression."
   `(emmet-pif (,parser input)
-                  (let ((input (cdr it))
-                        (expr (car it)))
-                    ,then-form)
-                  ,@(or else-forms '(it))))
+              (let ((input (cdr it))
+                    (expr (car it)))
+                ,then-form)
+              ,@(or else-forms '(it))))
 
 (defmacro emmet-por (parser1 parser2 then-form &rest else-forms)
   "OR two parsers. Try one parser, if it fails try the next."
   `(emmet-pif (,parser1 input)
-                  (let ((input (cdr it))
-                        (expr (car it)))
-                    ,then-form)
-                  (emmet-pif (,parser2 input)
-                                 (let ((input (cdr it))
-                                       (expr (car it)))
-                                   ,then-form)
-                                 ,@else-forms)))
+              (let ((input (cdr it))
+                    (expr (car it)))
+                ,then-form)
+              (emmet-pif (,parser2 input)
+                         (let ((input (cdr it))
+                               (expr (car it)))
+                           ,then-form)
+                         ,@else-forms)))
 
 (defmacro emmet-find (direction regexp &optional limit-of-search repeat-count)
   "Regexp-search in given direction, returning the position (or nil)

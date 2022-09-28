@@ -104,8 +104,10 @@ Enable it by running `M-x emmet-mode`.
 
 You probably want to add it to auto-load on your sgml modes:
 
-    (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-    (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+    ;; Auto-start on any markup modes
+    (add-hook 'sgml-mode-hook #'emmet-mode)
+    ;; enable Emmet's css abbreviation.
+    (add-hook 'css-mode-hook #'emmet-mode)
 
 By default, inserted markup will be indented with indent-region, according to
 the buffer's mode.  To disable this, do:
@@ -114,20 +116,24 @@ the buffer's mode.  To disable this, do:
 
 If you disable indent-region, you can set the default indent level thusly:
 
-    (add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 2))) ;; indent 2 spaces.
+    ;; indent 2 spaces.
+    (add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 2)))
 
 If you want the cursor to be positioned between first empty quotes after
 expanding:
 
-    (setq emmet-move-cursor-between-quotes t) ;; default nil
+    ;; default nil
+    (setq emmet-move-cursor-between-quotes t)
 
 Or if you don't want to move cursor after expanding:
 
-    (setq emmet-move-cursor-after-expanding nil) ;; default t
+    ;; default t
+    (setq emmet-move-cursor-after-expanding nil)
 
 If you want to customize Self-closing tags style:
 
-    (setq emmet-self-closing-tag-style " /") ;; default "/"
+    ;; default "/"
+    (setq emmet-self-closing-tag-style " /")
 
     ;; only " /", "/" and "" are valid.
     ;; eg. <meta />, <meta/>, <meta>

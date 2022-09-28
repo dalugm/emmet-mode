@@ -97,7 +97,8 @@
   (concat (upcase (cl-subseq s 0 1)) (cl-subseq s 1)))
 
 (defun emmet-lorem-generate (count)
-  (if (<= count 0) ""
+  (if (<= count 0)
+      ""
     (let ((sl (if (< count emmet-lorem-max-sentence) count
                 (emmet-random-range
                  emmet-lorem-min-sentence
@@ -108,10 +109,12 @@
       (let ((words (let ((w (emmet-lorem-choice-words sl)))
                      (let ((l (car (last w))))
                        (if (string-equal (substring l -1) ",")
-                           (append (cl-subseq w 0 -1) (list (substring l 0 -1)))
+                           (append (cl-subseq w 0 -1)
+                                   (list (substring l 0 -1)))
                          w)))))
-        (concat (emmet-upcase-first (emmet-join-string words " ")) last
+        (concat (emmet-upcase-first (emmet-join-string words " "))
+                last
                 (let ((next (emmet-lorem-generate (- count sl))))
-                  (if (string-equal next "") ""
+                  (if (string-equal next "")
+                      ""
                     (concat " " next))))))))
-

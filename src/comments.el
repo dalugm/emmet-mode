@@ -6,11 +6,11 @@
 ;; Copyright (C) 2013-     Shin Aoyama        (@smihica      https://github.com/smihica)
 ;; Copyright (C) 2009-2012 Chris Done
 
-;; Version: 1.0.0
-;; Author: dalu <mou.tong@qq.com>
+;; Maintainer: dalu <mou.tong@qq.com>
 ;; URL: https://github.com/dalugm/emmet-mode
-;; Last-Updated: 2021-12-25
+;; Version: 1.0.1
 ;; Keywords: convenience
+;; Package-Requires: ((emacs "25.1"))
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -42,9 +42,10 @@
 ;;
 ;;    (add-to-list 'load-path "~/Emacs/emmet/")
 ;;    (require 'emmet-mode)
-;;    (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-;;    (add-hook 'html-mode-hook 'emmet-mode)
-;;    (add-hook 'css-mode-hook  'emmet-mode)
+;;    ;; Auto-start on any markup modes
+;;    (add-hook 'sgml-mode-hook #'emmet-mode)
+;;    (add-hook 'html-mode-hook #'emmet-mode)
+;;    (add-hook 'css-mode-hook  #'emmet-mode)
 ;;
 ;; Enable the minor mode with M-x emmet-mode.
 ;;
