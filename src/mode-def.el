@@ -1,4 +1,5 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 ;; Emmet minor mode
 
 (defgroup emmet nil
@@ -46,7 +47,7 @@
                                (setq char nil))))
                       (point)))))
 
-(defcustom emmet-indentation 4
+(defcustom emmet-indentation 2
   "Number of spaces used for indentation."
   :type '(number :tag "Spaces")
   :group 'emmet)
@@ -107,12 +108,14 @@ e. g. without semicolons")
 (make-variable-buffer-local 'emmet-file-filter)
 
 (defvar emmet-jsx-major-modes
-  '(rjsx-mode
-    typescript-tsx-mode
-    js-jsx-mode
+  '(js-jsx-mode
+    js-mode
+    js-ts-mode
     js2-jsx-mode
     jsx-mode
-    js-mode)
+    rjsx-mode
+    tsx-ts-mode
+    typescript-tsx-mode)
   "Which modes to check before using jsx class expansion.")
 
 (defun emmet-transform (input)
@@ -124,7 +127,7 @@ e. g. without semicolons")
   (let ((style-attr-end "[^=][\"']")
         (style-attr-begin "style=[\"']")
         (style-tag-end "</style>")
-        (style-tag-begin "<style>"))
+        (style-tag-begin "<style.*>"))
     (and emmet-use-style-tag-and-attr-detection
          (or
           (emmet-check-if-between
@@ -417,7 +420,7 @@ accept it or skip it."
 
 To use this, add the function as a local hook:
 
-  (add-hook 'post-self-insert-hook 'emmet-preview-online t t)
+  (add-hook \\='post-self-insert-hook \\='emmet-preview-online t t)
 
 or enable `emmet-preview-mode'."
   (ignore-errors
@@ -481,8 +484,8 @@ See `emmet-preview-online'."
 
 (defun emmet-preview-transformed (indent)
   (let* ((string (buffer-substring-no-properties
-		  (overlay-start emmet-preview-input)
-		  (overlay-end emmet-preview-input))))
+                  (overlay-start emmet-preview-input)
+                  (overlay-end emmet-preview-input))))
     (let ((output (emmet-transform string)))
       (when output
         output))))
@@ -516,9 +519,9 @@ See `emmet-preview-online'."
                    "\\|"))
        (edit-point (format "\\(%s\\)" whole-regex)))
     (if (> count 0)
-	(progn
-	  (forward-char)
-	  (let ((search-result (re-search-forward edit-point nil t count)))
+        (progn
+          (forward-char)
+          (let ((search-result (re-search-forward edit-point nil t count)))
             (if search-result
                 (progn
                   (cond
@@ -529,8 +532,8 @@ See `emmet-preview-online'."
               (backward-char))))
       (progn
         (backward-char)
-	(let ((search-result (re-search-backward edit-point nil t (- count))))
-	  (if search-result
+        (let ((search-result (re-search-backward edit-point nil t (- count))))
+          (if search-result
               (progn
                 (cond
                  ((match-string 2) (goto-char (- (match-end 2) 1)))

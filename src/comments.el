@@ -25,10 +25,8 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
 ;;; Commentary:
-;;
+
 ;; Unfold CSS-selector-like expressions to markup.
 ;; Intended to be used with sgml-like languages.
 ;;
@@ -40,9 +38,9 @@
 ;;
 ;; Example setup:
 ;;
-;;    (add-to-list 'load-path "~/Emacs/emmet/")
+;;    (add-to-list 'load-path "path/to/emmet-mode/")
 ;;    (require 'emmet-mode)
-;;    ;; Auto-start on any markup modes
+;;    ;; Auto-start on any markup modes.
 ;;    (add-hook 'sgml-mode-hook #'emmet-mode)
 ;;    (add-hook 'html-mode-hook #'emmet-mode)
 ;;    (add-hook 'css-mode-hook  #'emmet-mode)
@@ -54,10 +52,8 @@
 ;; If you are hacking on this project, eval (emmet-test-cases) to
 ;; ensure that your changes have not broken anything.
 ;; Feel free to add new test cases if you add new features.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
+
 ;;; History:
-;;
+
 ;; This is a fork of zencoding-mode to support Emmet's feature.
 ;; zencoding-mode (https://github.com/rooney/zencoding)

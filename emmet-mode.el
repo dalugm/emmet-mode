@@ -25,10 +25,8 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
 ;;; Commentary:
-;;
+
 ;; Unfold CSS-selector-like expressions to markup.
 ;; Intended to be used with sgml-like languages.
 ;;
@@ -40,9 +38,9 @@
 ;;
 ;; Example setup:
 ;;
-;;    (add-to-list 'load-path "~/Emacs/emmet/")
+;;    (add-to-list 'load-path "path/to/emmet-mode/")
 ;;    (require 'emmet-mode)
-;;    ;; Auto-start on any markup modes
+;;    ;; Auto-start on any markup modes.
 ;;    (add-hook 'sgml-mode-hook #'emmet-mode)
 ;;    (add-hook 'html-mode-hook #'emmet-mode)
 ;;    (add-hook 'css-mode-hook  #'emmet-mode)
@@ -54,15 +52,12 @@
 ;; If you are hacking on this project, eval (emmet-test-cases) to
 ;; ensure that your changes have not broken anything.
 ;; Feel free to add new test cases if you add new features.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
+
 ;;; History:
-;;
+
 ;; This is a fork of zencoding-mode to support Emmet's feature.
 ;; zencoding-mode (https://github.com/rooney/zencoding)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
+
 ;;; Code:
 
 (defconst emmet-mode-version "1.0.1")
@@ -87,7 +82,7 @@
     (maphash (lambda (k v) (setq vs (cons v vs))) hash)
     vs))
 
-(defun emmet-jsx-prop-value-var? (prop-value)
+(defun emmet-jsx-prop-value-var-p (prop-value)
   (string-match "{.+}" prop-value))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -145,7 +140,8 @@ and leaving the point in place."
       (mapcar (lambda (ref) (match-string ref string))
               (if (sequencep refs) refs (list refs)))
     nil))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 ;; Emmet minor mode
 
 (defgroup emmet nil
@@ -193,7 +189,7 @@ and leaving the point in place."
                                (setq char nil))))
                       (point)))))
 
-(defcustom emmet-indentation 4
+(defcustom emmet-indentation 2
   "Number of spaces used for indentation."
   :type '(number :tag "Spaces")
   :group 'emmet)
@@ -254,12 +250,14 @@ e. g. without semicolons")
 (make-variable-buffer-local 'emmet-file-filter)
 
 (defvar emmet-jsx-major-modes
-  '(rjsx-mode
-    typescript-tsx-mode
-    js-jsx-mode
+  '(js-jsx-mode
+    js-mode
+    js-ts-mode
     js2-jsx-mode
     jsx-mode
-    js-mode)
+    rjsx-mode
+    tsx-ts-mode
+    typescript-tsx-mode)
   "Which modes to check before using jsx class expansion.")
 
 (defun emmet-transform (input)
@@ -271,7 +269,7 @@ e. g. without semicolons")
   (let ((style-attr-end "[^=][\"']")
         (style-attr-begin "style=[\"']")
         (style-tag-end "</style>")
-        (style-tag-begin "<style>"))
+        (style-tag-begin "<style.*>"))
     (and emmet-use-style-tag-and-attr-detection
          (or
           (emmet-check-if-between
@@ -564,7 +562,7 @@ accept it or skip it."
 
 To use this, add the function as a local hook:
 
-  (add-hook 'post-self-insert-hook 'emmet-preview-online t t)
+  (add-hook \\='post-self-insert-hook \\='emmet-preview-online t t)
 
 or enable `emmet-preview-mode'."
   (ignore-errors
@@ -628,8 +626,8 @@ See `emmet-preview-online'."
 
 (defun emmet-preview-transformed (indent)
   (let* ((string (buffer-substring-no-properties
-		  (overlay-start emmet-preview-input)
-		  (overlay-end emmet-preview-input))))
+                  (overlay-start emmet-preview-input)
+                  (overlay-end emmet-preview-input))))
     (let ((output (emmet-transform string)))
       (when output
         output))))
@@ -663,9 +661,9 @@ See `emmet-preview-online'."
                    "\\|"))
        (edit-point (format "\\(%s\\)" whole-regex)))
     (if (> count 0)
-	(progn
-	  (forward-char)
-	  (let ((search-result (re-search-forward edit-point nil t count)))
+        (progn
+          (forward-char)
+          (let ((search-result (re-search-forward edit-point nil t count)))
             (if search-result
                 (progn
                   (cond
@@ -676,8 +674,8 @@ See `emmet-preview-online'."
               (backward-char))))
       (progn
         (backward-char)
-	(let ((search-result (re-search-backward edit-point nil t (- count))))
-	  (if search-result
+        (let ((search-result (re-search-backward edit-point nil t (- count))))
+          (if search-result
               (progn
                 (cond
                  ((match-string 2) (goto-char (- (match-end 2) 1)))
@@ -3088,8 +3086,9 @@ tbl) tbl)
 tbl) tbl)
 tbl) tbl)
 tbl))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; XML abbrev
+
+
+;;; XML abbrev.
 
 (require 'cl-lib)
 
@@ -3640,12 +3639,11 @@ otherwise return `(error ,error-message)."
                         `((classes . ,(list expr)) . ,input))
              '(error "expected class")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Zen coding transformer from AST to string
+
+;; Zen coding transformer from AST to string.
 
 (defvar emmet-leaf-function nil
-  "Function to execute when expanding a leaf node in the
-  Emmet AST.")
+  "Function to execute when expanding a leaf node in the Emmet AST.")
 
 (defvar emmet-jsx-className-braces-p nil
   "Wether to wrap classNames in {} instead of \"\"")
@@ -3965,8 +3963,8 @@ otherwise return `(error ,error-message)."
             (sib2 (emmet-transform-ast (caddr ast) tag-maker)))
         (concat sib1 "\n" sib2))))))
 
-;; Indents text rigidly by inserting spaces
-;; Only matters if emmet-indent-after-insert is set to nil
+;; Indents text rigidly by inserting spaces.
+;; Only matters if emmet-indent-after-insert is set to nil.
 (defun emmet-indent (text)
   "Indent the text"
   (if text
@@ -4095,13 +4093,14 @@ otherwise return `(error ,error-message)."
                   (if (string-equal next "")
                       ""
                     (concat " " next))))))))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;;; CSS abbrev:
+
+
+;;; CSS abbrev.
 
 (emmet-defparameter
  emmet-css-unit-aliases
  (gethash "unitAliases" (gethash "css" emmet-preferences)))
+
 (defun emmet-css-arg-number (input)
   (emmet-parse
    " *\\(\\(?:-\\|\\)[0-9.]+\\)\\(-\\|[A-Za-z]*\\)" 3 "css number arguments"
@@ -4127,6 +4126,7 @@ otherwise return `(error ,error-message)."
  (gethash "trailingAliases"
           (gethash "color"
                    (gethash "css" emmet-preferences))))
+
 (defun emmet-css-arg-color (input)
   (emmet-parse
    (concat " *#\\([0-9a-fA-F]\\{1,6\\}\\)\\(rgb\\|\\)\\(["
@@ -4314,9 +4314,11 @@ otherwise return `(error ,error-message)."
 (emmet-defparameter
  emmet-vendor-prefixes-properties
  (gethash "vendorPrefixesProperties" (gethash "css" emmet-preferences)))
+
 (emmet-defparameter
  emmet-vendor-prefixes-default
  (list "webkit" "moz" "ms" "o"))
+
 (defun emmet-css-transform-vendor-prefixes (line vp)
   (let ((key (cl-subseq line 0 (or (cl-position ?: line) (length line)))))
     (let ((vps (if (eql vp 'auto)
@@ -4374,7 +4376,8 @@ otherwise return `(error ,error-message)."
                        (emmet-join-string
                         (mapcar (lambda (arg)
                                   (if (listp arg) (apply #'concat arg) arg))
-                                (cdddr expr)) " ")
+                                (cdddr expr))
+                        " ")
                        ";"))))
         (let ((line
                (if (caddr expr)

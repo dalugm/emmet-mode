@@ -1,5 +1,6 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; XML abbrev
+
+
+;;; XML abbrev.
 
 (require 'cl-lib)
 
@@ -550,12 +551,11 @@ otherwise return `(error ,error-message)."
                         `((classes . ,(list expr)) . ,input))
              '(error "expected class")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Zen coding transformer from AST to string
+
+;; Zen coding transformer from AST to string.
 
 (defvar emmet-leaf-function nil
-  "Function to execute when expanding a leaf node in the
-  Emmet AST.")
+  "Function to execute when expanding a leaf node in the Emmet AST.")
 
 (defvar emmet-jsx-className-braces-p nil
   "Wether to wrap classNames in {} instead of \"\"")
@@ -875,8 +875,8 @@ otherwise return `(error ,error-message)."
             (sib2 (emmet-transform-ast (caddr ast) tag-maker)))
         (concat sib1 "\n" sib2))))))
 
-;; Indents text rigidly by inserting spaces
-;; Only matters if emmet-indent-after-insert is set to nil
+;; Indents text rigidly by inserting spaces.
+;; Only matters if emmet-indent-after-insert is set to nil.
 (defun emmet-indent (text)
   "Indent the text"
   (if text

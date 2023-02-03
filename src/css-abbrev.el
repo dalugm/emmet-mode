@@ -1,10 +1,11 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;;; CSS abbrev:
+
+
+;;; CSS abbrev.
 
 (emmet-defparameter
  emmet-css-unit-aliases
  (gethash "unitAliases" (gethash "css" emmet-preferences)))
+
 (defun emmet-css-arg-number (input)
   (emmet-parse
    " *\\(\\(?:-\\|\\)[0-9.]+\\)\\(-\\|[A-Za-z]*\\)" 3 "css number arguments"
@@ -30,6 +31,7 @@
  (gethash "trailingAliases"
           (gethash "color"
                    (gethash "css" emmet-preferences))))
+
 (defun emmet-css-arg-color (input)
   (emmet-parse
    (concat " *#\\([0-9a-fA-F]\\{1,6\\}\\)\\(rgb\\|\\)\\(["
@@ -217,9 +219,11 @@
 (emmet-defparameter
  emmet-vendor-prefixes-properties
  (gethash "vendorPrefixesProperties" (gethash "css" emmet-preferences)))
+
 (emmet-defparameter
  emmet-vendor-prefixes-default
  (list "webkit" "moz" "ms" "o"))
+
 (defun emmet-css-transform-vendor-prefixes (line vp)
   (let ((key (cl-subseq line 0 (or (cl-position ?: line) (length line)))))
     (let ((vps (if (eql vp 'auto)
@@ -277,7 +281,8 @@
                        (emmet-join-string
                         (mapcar (lambda (arg)
                                   (if (listp arg) (apply #'concat arg) arg))
-                                (cdddr expr)) " ")
+                                (cdddr expr))
+                        " ")
                        ";"))))
         (let ((line
                (if (caddr expr)

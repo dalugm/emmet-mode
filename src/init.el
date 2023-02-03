@@ -1,5 +1,4 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
+
 ;;; Code:
 
 (defconst emmet-mode-version "1.0.1")
@@ -24,7 +23,7 @@
     (maphash (lambda (k v) (setq vs (cons v vs))) hash)
     vs))
 
-(defun emmet-jsx-prop-value-var? (prop-value)
+(defun emmet-jsx-prop-value-var-p (prop-value)
   (string-match "{.+}" prop-value))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
