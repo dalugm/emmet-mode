@@ -5,8 +5,6 @@ all:	emmet-mode.el emmet-mode.elc
 emmet-mode.el: src/snippets.el src/preferences.el src/*
 	rm -f $(DST)
 	touch $(DST)
-	cat src/comments.el >> $(DST)
-	cat src/init.el >> $(DST)
 	cat src/mode-def.el >> $(DST)
 	cat src/snippets.el >> $(DST)
 	cat src/preferences.el >> $(DST)

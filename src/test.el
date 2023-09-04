@@ -25,14 +25,14 @@
 (defun emmet-test-cases (&rest args)
   (let ((cmd (car args)))
     (cond ((eql cmd 'assign)
-           (let ((name (cadr args))
-                 (fn   (caddr args))
-                 (defs (cadddr args)))
-             (let ((place (assoc name *emmet-test-cases*)))
-               (if place
-                   (setf (cdr place) (cons fn defs))
-                 (setq *emmet-test-cases*
-                       (cons (cons name (cons fn defs)) *emmet-test-cases*))))))
+           (let* ((name (cadr args))
+                  (fn (caddr args))
+                  (defs (cadddr args))
+                  (place (assoc name *emmet-test-cases*)))
+             (if place
+                 (setf (cdr place) (cons fn defs))
+               (setq *emmet-test-cases*
+                     (cons (cons name (cons fn defs)) *emmet-test-cases*)))))
           (t
            (cl-loop for test in (reverse *emmet-test-cases*) do
                     (let ((name  (symbol-name (car test)))
@@ -45,7 +45,7 @@
                      ,fn
                      ',(cl-loop for x on tests by #'cddr collect
                                 (cons (car x)
-                                      (emmet-join-string (cadr x)
+                                      (emmet-string-join (cadr x)
                                                          "\n")))))
 
 (defmacro define-emmet-transform-html-test-case (name &rest tests)

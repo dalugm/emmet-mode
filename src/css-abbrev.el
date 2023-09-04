@@ -1,6 +1,6 @@
 
 
-;;; CSS abbrev.
+;;;; CSS abbrev.
 
 (emmet-defparameter
  emmet-css-unit-aliases
@@ -35,8 +35,8 @@
 (defun emmet-css-arg-color (input)
   (emmet-parse
    (concat " *#\\([0-9a-fA-F]\\{1,6\\}\\)\\(rgb\\|\\)\\(["
-           (emmet-join-string
-            (emmet-get-keys-of-hash emmet-css-color-trailing-aliases) "")
+           (emmet-string-join
+            (hash-table-keys emmet-css-color-trailing-aliases) "")
            "]\\|\\)")
    4 "css color argument"
    (let ((color
@@ -164,7 +164,7 @@
 
 (emmet-defparameter
  emmet-css-unitless-properties-regex
- (concat "^\\(:?" (emmet-join-string
+ (concat "^\\(:?" (emmet-string-join
                    emmet-css-unitless-properties "\\|")
          "\\):.*$"))
 
@@ -172,7 +172,7 @@
   (cl-flet ((insert-space-between-name-and-body
               (str)
               (if (string-match "^\\([a-z-]+:\\)\\(.+\\)$" str)
-                  (emmet-join-string
+                  (emmet-string-join
                    (mapcar (lambda (ref) (match-string ref str)) '(1 2)) " ")
                 str))
             (split-string-to-body
@@ -212,7 +212,7 @@
             (progn
               (when (nthcdr ,idx-max ,args)
                 (setf (nthcdr ,idx-max ,args)
-                      (list (emmet-join-string
+                      (list (emmet-string-join
                              (nthcdr ,idx-max ,args) " "))))
               ,body)))))))
 
@@ -236,13 +236,13 @@
                                  ((= v ?s) "ms")
                                  ((= v ?o) "o")))
                          vp))))
-      (emmet-join-string
+      (emmet-string-join
        (append (mapcar (lambda (v) (concat "-" v "-" line)) vps)
                (list line))
        "\n"))))
 
 (defun emmet-css-transform-exprs (exprs)
-  (emmet-join-string
+  (emmet-string-join
    (mapcar
     (lambda (expr)
       (let* ((hash-map (if emmet-use-sass-syntax
@@ -278,7 +278,7 @@
                              arg))
                          (cdddr expr))))
                (concat (car expr) ": "
-                       (emmet-join-string
+                       (emmet-string-join
                         (mapcar (lambda (arg)
                                   (if (listp arg) (apply #'concat arg) arg))
                                 (cdddr expr))

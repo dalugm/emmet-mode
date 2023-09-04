@@ -1,8 +1,6 @@
 
 
-;;; XML abbrev.
-
-(require 'cl-lib)
+;;;; XML abbrev.
 
 (emmet-defparameter
  emmet-tag-aliases-table
@@ -551,12 +549,6 @@ otherwise return `(error ,error-message)."
                         `((classes . ,(list expr)) . ,input))
              '(error "expected class")))
 
-
-;; Zen coding transformer from AST to string.
-
-(defvar emmet-leaf-function nil
-  "Function to execute when expanding a leaf node in the Emmet AST.")
-
 (defvar emmet-jsx-className-braces-p nil
   "Wether to wrap classNames in {} instead of \"\"")
 
@@ -661,12 +653,12 @@ otherwise return `(error ,error-message)."
              (if b
                  `(lambda (contents)
                     (concat
-                     ,(emmet-join-string (reverse a) "\n")
+                     ,(emmet-string-join (reverse a) "\n")
                      contents
-                     ,(emmet-join-string (reverse b) "\n")))
+                     ,(emmet-string-join (reverse b) "\n")))
                `(lambda (contents)
                   (concat
-                   ,(emmet-join-string (reverse a) "\n")
+                   ,(emmet-string-join (reverse a) "\n")
                    contents))))))
       (eval (iter lines 'a nil nil)))))
 

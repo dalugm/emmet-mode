@@ -1,3 +1,7 @@
+
+
+;;;; Lorem.
+
 (defvar emmet-lorem-words
   '("lorem" "ipsum" "dolor" "sit" "amet," "consectetur" "adipiscing" "elit" "ut" "aliquam," "purus" "sit" "amet" "luctus" "venenatis,"
     "lectus" "magna" "fringilla" "urna," "porttitor" "rhoncus" "dolor" "purus" "non" "enim" "praesent" "elementum" "facilisis" "leo,"
@@ -93,28 +97,32 @@
 
 (defvar emmet-lorem-max-sentence 30)
 
-(defun emmet-upcase-first (s)
-  (concat (upcase (cl-subseq s 0 1)) (cl-subseq s 1)))
+(defun emmet-upcase-first (sequence)
+  "Upcase first SEQUENCE"
+  (concat (upcase (cl-subseq sequence 0 1))
+          (cl-subseq sequence 1)))
 
 (defun emmet-lorem-generate (count)
+  "Generate COUNT lorem(s)."
   (if (<= count 0)
       ""
-    (let ((sl (if (< count emmet-lorem-max-sentence) count
-                (emmet-random-range
-                 emmet-lorem-min-sentence
-                 (min (- count emmet-lorem-min-sentence)
-                      emmet-lorem-max-sentence))))
-          (last (let ((r (random 4)))
-                  (if (< 1 r) "." (if (< 0 r) "?" "!")))))
-      (let ((words (let ((w (emmet-lorem-choice-words sl)))
-                     (let ((l (car (last w))))
-                       (if (string-equal (substring l -1) ",")
-                           (append (cl-subseq w 0 -1)
-                                   (list (substring l 0 -1)))
-                         w)))))
-        (concat (emmet-upcase-first (emmet-join-string words " "))
-                last
-                (let ((next (emmet-lorem-generate (- count sl))))
-                  (if (string-equal next "")
-                      ""
-                    (concat " " next))))))))
+    (let* ((sl (if (< count emmet-lorem-max-sentence)
+                   count
+                 (emmet-random-range
+                  emmet-lorem-min-sentence
+                  (min (- count emmet-lorem-min-sentence)
+                       emmet-lorem-max-sentence))))
+           (last (let ((r (random 4)))
+                   (if (< 1 r) "." (if (< 0 r) "?" "!"))))
+           (words (let ((w (emmet-lorem-choice-words sl)))
+                    (let ((l (car (last w))))
+                      (if (string-equal (substring l -1) ",")
+                          (append (cl-subseq w 0 -1)
+                                  (list (substring l 0 -1)))
+                        w)))))
+      (concat (emmet-upcase-first (emmet-string-join words " "))
+              last
+              (let ((next (emmet-lorem-generate (- count sl))))
+                (if (string-equal next "")
+                    ""
+                  (concat " " next)))))))
