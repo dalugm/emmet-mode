@@ -590,7 +590,7 @@
 (defun emmet-inline-expansion-test (lis)
   "Tests inline expansion of emmet forms nested inside markup."
   (let ((es (car lis))
-        (emmet-preview-default nil)
+        (emmet-expand-preview-p nil)
         (emmet-indent-after-insert t))
     (with-temp-buffer
       (emmet-mode 1)
@@ -610,7 +610,7 @@
 ;;   if emmet-indent-after-insert is nil
 (defun emmet-indent-test (lis)
   (let ((es (car lis))
-        (emmet-preview-default nil)
+        (emmet-expand-preview-p nil)
         (indent-tabs-mode nil)
         (tab-width 2)
         (standard-indent 2))
@@ -670,7 +670,7 @@
 ;;   after tag with attributes)
 (defun emmet-regression-54-test (lis)
   (let ((es (car lis))
-        (emmet-preview-default nil)
+        (emmet-expand-preview-p nil)
         (emmet-indent-after-insert nil))
     (with-temp-buffer
       (emmet-mode 1)
@@ -760,7 +760,7 @@
 
 (defun emmet-self-closing-tag-style-test (lis)
   (let ((es (car lis))
-        (emmet-preview-default nil))
+        (emmet-expand-preview-p nil))
     (with-temp-buffer
       (emmet-mode 1)
       (insert es)
