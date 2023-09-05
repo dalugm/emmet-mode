@@ -8,7 +8,7 @@
 
 ;; Maintainer: dalu <mou.tong@qq.com>
 ;; URL: https://github.com/dalugm/emmet-mode
-;; Version: 1.0.2
+;; Version: 1.1.1
 ;; Keywords: convenience
 ;; Package-Requires: ((emacs "25.1"))
 
@@ -68,7 +68,7 @@
   "Customization group for emmet-mode."
   :group 'convenience)
 
-(defconst emmet-mode-version "1.1.0")
+(defconst emmet-mode-version "1.1.1")
 
 ;;;; Customization.
 

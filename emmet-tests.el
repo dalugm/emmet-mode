@@ -1,11 +1,37 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Test-cases
+;;; emmet-tests.el --- some emmet tests  -*- lexical-binding: t -*-
 
-(load-file (concat (file-name-directory (or load-file-name (buffer-file-name))) "../emmet-mode.el"))
+;; Copyright (C) 2021-     Mou Tong           (@dalugm       https://github.com/dalugm)
+;; Copyright (C) 2014-     Dmitry Mukhutdinov (@flyingleafe  https://github.com/flyingleafe)
+;; Copyright (C) 2014-     William David Mayo (@pbocks       https://github.com/pobocks)
+;; Copyright (C) 2013-     Shin Aoyama        (@smihica      https://github.com/smihica)
+;; Copyright (C) 2009-2012 Chris Done
 
-(emmet-defparameter *emmet-test-cases* nil)
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; Test basic emmet mechanics and the loading system.
+
+;;; Code:
 
 (require 'cl-lib)
+
+(load-file (expand-file-name "emmet-mode.el"
+                             (file-name-directory
+                              (or load-file-name (buffer-file-name)))))
+
+(emmet-defparameter *emmet-test-cases* nil)
 
 (defun emmet-run-test-case (name fn cases)
   (let ((res (cl-loop for c in cases
@@ -59,8 +85,7 @@
                      ',(cl-loop for x on tests by #'cddr collect
                                 (cons (car x) (cadr x)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; XML-abbrev tests
+;;;; XML-abbrev tests.
 
 (define-emmet-transform-html-test-case Tags
                                        "a"                      ("<a href=\"\"></a>")
@@ -82,8 +107,8 @@
                                        "input type=text"        ("<input name=\"\" type=\"text\" value=\"\"/>")
                                        "img"                    ("<img alt=\"\" src=\"\"/>")
                                        "img>metadata/*2"        ("<img alt=\"\" src=\"\">"
-                                                                 "    <metadata/>"
-                                                                 "    <metadata/>"
+                                                                 "  <metadata/>"
+                                                                 "  <metadata/>"
                                                                  "</img>"))
 
 (define-emmet-transform-html-test-case Siblings
@@ -103,25 +128,25 @@
 
 (define-emmet-transform-html-test-case Tag-expansion
                                        "table+"                 ("<table>"
-                                                                 "    <tr>"
-                                                                 "        <td></td>"
-                                                                 "    </tr>"
+                                                                 "  <tr>"
+                                                                 "    <td></td>"
+                                                                 "  </tr>"
                                                                  "</table>")
                                        "dl+"                    ("<dl>"
-                                                                 "    <dt></dt>"
-                                                                 "    <dd></dd>"
+                                                                 "  <dt></dt>"
+                                                                 "  <dd></dd>"
                                                                  "</dl>")
                                        "ul+"                    ("<ul>"
-                                                                 "    <li></li>"
+                                                                 "  <li></li>"
                                                                  "</ul>")
                                        "ul++ol+"                ("<ul>"
-                                                                 "    <li></li>"
+                                                                 "  <li></li>"
                                                                  "</ul>"
                                                                  "<ol>"
-                                                                 "    <li></li>"
+                                                                 "  <li></li>"
                                                                  "</ol>")
                                        "ul#q.x.y[m=l]+"          ("<ul id=\"q\" class=\"x y\" m=\"l\">"
-                                                                  "    <li></li>"
+                                                                  "  <li></li>"
                                                                   "</ul>"))
 
 (define-emmet-transform-html-test-case Parent-child
@@ -132,53 +157,53 @@
                                        "a#q.x.y.z>b"            ("<a id=\"q\" class=\"x y z\" href=\"\"><b></b></a>")
                                        "a#q.x.y.z>b#p.l.m.n"    ("<a id=\"q\" class=\"x y z\" href=\"\"><b id=\"p\" class=\"l m n\"></b></a>")
                                        "#q>.x"                  ("<div id=\"q\">"
-                                                                 "    <div class=\"x\"></div>"
+                                                                 "  <div class=\"x\"></div>"
                                                                  "</div>")
                                        "a>b+c"                  ("<a href=\"\">"
-                                                                 "    <b></b>"
-                                                                 "    <c></c>"
+                                                                 "  <b></b>"
+                                                                 "  <c></c>"
                                                                  "</a>")
                                        "a>b+c>d"                ("<a href=\"\">"
-                                                                 "    <b></b>"
-                                                                 "    <c><d></d></c>"
+                                                                 "  <b></b>"
+                                                                 "  <c><d></d></c>"
                                                                  "</a>"))
 
 (define-emmet-transform-html-test-case Climb-up
                                        "a>b>c^d"                ("<a href=\"\">"
-                                                                 "    <b><c></c></b>"
-                                                                 "    <d></d>"
+                                                                 "  <b><c></c></b>"
+                                                                 "  <d></d>"
                                                                  "</a>")
                                        "a>b>c^^d"               ("<a href=\"\"><b><c></c></b></a>"
                                                                  "<d></d>")
                                        "a*2>b*2>c^d"            ("<a href=\"\">"
-                                                                 "    <b><c></c></b>"
-                                                                 "    <b><c></c></b>"
-                                                                 "    <d></d>"
+                                                                 "  <b><c></c></b>"
+                                                                 "  <b><c></c></b>"
+                                                                 "  <d></d>"
                                                                  "</a>"
                                                                  "<a href=\"\">"
-                                                                 "    <b><c></c></b>"
-                                                                 "    <b><c></c></b>"
-                                                                 "    <d></d>"
+                                                                 "  <b><c></c></b>"
+                                                                 "  <b><c></c></b>"
+                                                                 "  <d></d>"
                                                                  "</a>")
 
                                        "div+a>p>span{foo}+em>b^^^p"
                                        ("<div></div>"
                                         "<a href=\"\">"
-                                        "    <p>"
-                                        "        <span>foo</span>"
-                                        "        <em><b></b></em>"
-                                        "    </p>"
+                                        "  <p>"
+                                        "    <span>foo</span>"
+                                        "    <em><b></b></em>"
+                                        "  </p>"
                                         "</a>"
                                         "<p></p>")
 
                                        "div+div>p>span+em^blockquote{foo}"
                                        ("<div></div>"
                                         "<div>"
-                                        "    <p>"
-                                        "        <span></span>"
-                                        "        <em></em>"
-                                        "    </p>"
-                                        "    <blockquote>foo</blockquote>"
+                                        "  <p>"
+                                        "    <span></span>"
+                                        "    <em></em>"
+                                        "  </p>"
+                                        "  <blockquote>foo</blockquote>"
                                         "</div>"))
 
 (define-emmet-transform-html-test-case Multiplication
@@ -192,24 +217,24 @@
                                                                  "<b></b>"
                                                                  "<b></b>")
                                        "a*2>b*2"                ("<a href=\"\">"
-                                                                 "    <b></b>"
-                                                                 "    <b></b>"
+                                                                 "  <b></b>"
+                                                                 "  <b></b>"
                                                                  "</a>"
                                                                  "<a href=\"\">"
-                                                                 "    <b></b>"
-                                                                 "    <b></b>"
+                                                                 "  <b></b>"
+                                                                 "  <b></b>"
                                                                  "</a>")
                                        "a>b*2"                  ("<a href=\"\">"
-                                                                 "    <b></b>"
-                                                                 "    <b></b>"
+                                                                 "  <b></b>"
+                                                                 "  <b></b>"
                                                                  "</a>")
                                        "a#q.x>b#q.x*2"          ("<a id=\"q\" class=\"x\" href=\"\">"
-                                                                 "    <b id=\"q\" class=\"x\"></b>"
-                                                                 "    <b id=\"q\" class=\"x\"></b>"
+                                                                 "  <b id=\"q\" class=\"x\"></b>"
+                                                                 "  <b id=\"q\" class=\"x\"></b>"
                                                                  "</a>")
                                        "a#q.x>b/#q.x*2"         ("<a id=\"q\" class=\"x\" href=\"\">"
-                                                                 "    <b id=\"q\" class=\"x\"/>"
-                                                                 "    <b id=\"q\" class=\"x\"/>"
+                                                                 "  <b id=\"q\" class=\"x\"/>"
+                                                                 "  <b id=\"q\" class=\"x\"/>"
                                                                  "</a>"))
 
 (define-emmet-transform-html-test-case Numbering
@@ -217,46 +242,46 @@
                                                                  "<a class=\"2x\" href=\"\"></a>"
                                                                  "<a class=\"3x\" href=\"\"></a>")
                                        "ul>li.item$*3"          ("<ul>"
-                                                                 "    <li class=\"item1\"></li>"
-                                                                 "    <li class=\"item2\"></li>"
-                                                                 "    <li class=\"item3\"></li>"
+                                                                 "  <li class=\"item1\"></li>"
+                                                                 "  <li class=\"item2\"></li>"
+                                                                 "  <li class=\"item3\"></li>"
                                                                  "</ul>")
                                        "ul>li.item$$$*3"        ("<ul>"
-                                                                 "    <li class=\"item001\"></li>"
-                                                                 "    <li class=\"item002\"></li>"
-                                                                 "    <li class=\"item003\"></li>"
+                                                                 "  <li class=\"item001\"></li>"
+                                                                 "  <li class=\"item002\"></li>"
+                                                                 "  <li class=\"item003\"></li>"
                                                                  "</ul>")
                                        "ul>li.item$@-*2"        ("<ul>"
-                                                                 "    <li class=\"item2\"></li>"
-                                                                 "    <li class=\"item1\"></li>"
+                                                                 "  <li class=\"item2\"></li>"
+                                                                 "  <li class=\"item1\"></li>"
                                                                  "</ul>")
                                        "ul>li.item$@-1000*2"    ("<ul>"
-                                                                 "    <li class=\"item1001\"></li>"
-                                                                 "    <li class=\"item1000\"></li>"
+                                                                 "  <li class=\"item1001\"></li>"
+                                                                 "  <li class=\"item1000\"></li>"
                                                                  "</ul>")
                                        "a.$*2>b.$$@-*3"         ("<a class=\"1\" href=\"\">"
-                                                                 "    <b class=\"03\"></b>"
-                                                                 "    <b class=\"02\"></b>"
-                                                                 "    <b class=\"01\"></b>"
+                                                                 "  <b class=\"03\"></b>"
+                                                                 "  <b class=\"02\"></b>"
+                                                                 "  <b class=\"01\"></b>"
                                                                  "</a>"
                                                                  "<a class=\"2\" href=\"\">"
-                                                                 "    <b class=\"03\"></b>"
-                                                                 "    <b class=\"02\"></b>"
-                                                                 "    <b class=\"01\"></b>"
+                                                                 "  <b class=\"03\"></b>"
+                                                                 "  <b class=\"02\"></b>"
+                                                                 "  <b class=\"01\"></b>"
                                                                  "</a>")
 
                                        "(div>(a#id$$*2)+b.c$@-3+c#d$)*2"
                                        ("<div>"
-                                        "    <a id=\"id01\" href=\"\"></a>"
-                                        "    <a id=\"id02\" href=\"\"></a>"
-                                        "    <b class=\"c4\"></b>"
-                                        "    <c id=\"d1\"></c>"
+                                        "  <a id=\"id01\" href=\"\"></a>"
+                                        "  <a id=\"id02\" href=\"\"></a>"
+                                        "  <b class=\"c4\"></b>"
+                                        "  <c id=\"d1\"></c>"
                                         "</div>"
                                         "<div>"
-                                        "    <a id=\"id01\" href=\"\"></a>"
-                                        "    <a id=\"id02\" href=\"\"></a>"
-                                        "    <b class=\"c3\"></b>"
-                                        "    <c id=\"d2\"></c>"
+                                        "  <a id=\"id01\" href=\"\"></a>"
+                                        "  <a id=\"id02\" href=\"\"></a>"
+                                        "  <b class=\"c3\"></b>"
+                                        "  <c id=\"d2\"></c>"
                                         "</div>")
 
                                        "a:b$$$-c$$@-:d$@-3-e$$@100/#b.c$*3"
@@ -266,16 +291,16 @@
 
                                        "ul>li.item${name: item$ price: $\\$}*3"
                                        ("<ul>"
-                                        "    <li class=\"item1\">name: item1 price: 1$</li>"
-                                        "    <li class=\"item2\">name: item2 price: 2$</li>"
-                                        "    <li class=\"item3\">name: item3 price: 3$</li>"
+                                        "  <li class=\"item1\">name: item1 price: 1$</li>"
+                                        "  <li class=\"item2\">name: item2 price: 2$</li>"
+                                        "  <li class=\"item3\">name: item3 price: 3$</li>"
                                         "</ul>")
 
                                        "ul>li[id=\"thing-$\"]*3"
                                        ("<ul>"
-                                        "    <li id=\"thing-1\"></li>"
-                                        "    <li id=\"thing-2\"></li>"
-                                        "    <li id=\"thing-3\"></li>"
+                                        "  <li id=\"thing-1\"></li>"
+                                        "  <li id=\"thing-2\"></li>"
+                                        "  <li id=\"thing-3\"></li>"
                                         "</ul>"))
 
 (define-emmet-transform-html-test-case Properties
@@ -304,8 +329,8 @@
                                        "a[x=y]>b"                ("<a href=\"\" x=\"y\"><b></b></a>")
                                        "a[x=y]>b[x=y]"            ("<a href=\"\" x=\"y\"><b x=\"y\"></b></a>")
                                        "a[x=y]>b[x=y]+c[x=y]"      ("<a href=\"\" x=\"y\">"
-                                                                    "    <b x=\"y\"></b>"
-                                                                    "    <c x=\"y\"></c>"
+                                                                    "  <b x=\"y\"></b>"
+                                                                    "  <c x=\"y\"></c>"
                                                                     "</a>"))
 
 (define-emmet-transform-html-test-case Parentheses
@@ -336,22 +361,22 @@
 (define-emmet-transform-html-test-case Text
                                        "a{Click me}"            ("<a href=\"\">Click me</a>")
                                        "a>{Click me}*3"         ("<a href=\"\">"
-                                                                 "    Click me"
-                                                                 "    Click me"
-                                                                 "    Click me"
+                                                                 "  Click me"
+                                                                 "  Click me"
+                                                                 "  Click me"
                                                                  "</a>")
                                        "a{click}+b{here}"       ("<a href=\"\">click</a>"
                                                                  "<b>here</b>")
                                        "a>{click}+b{here}"      ("<a href=\"\">"
-                                                                 "    click"
-                                                                 "    <b>here</b>"
+                                                                 "  click"
+                                                                 "  <b>here</b>"
                                                                  "</a>")
 
                                        "p>{Click }+a{here}+{ to continue}"
                                        ("<p>"
-                                        "    Click "
-                                        "    <a href=\"\">here</a>"
-                                        "     to continue"
+                                        "  Click "
+                                        "  <a href=\"\">here</a>"
+                                        "   to continue"
                                         "</p>")
 
                                        "p{Click }+a{here}+{ to continue}"
@@ -407,9 +432,9 @@
                                                                  "<!-- /.b -->")
                                        "#a>.b|c"                ("<!-- #a -->"
                                                                  "<div id=\"a\">"
-                                                                 "    <!-- .b -->"
-                                                                 "    <div class=\"b\"></div>"
-                                                                 "    <!-- /.b -->"
+                                                                 "  <!-- .b -->"
+                                                                 "  <div class=\"b\"></div>"
+                                                                 "  <!-- /.b -->"
                                                                  "</div>"
                                                                  "<!-- /#a -->"))
 
@@ -423,10 +448,10 @@
 
                                        "p>{This is haml}*2+a[href=#]+br|haml"
                                        ("%p"
-                                        "    This is haml"
-                                        "    This is haml"
-                                        "    %a{:href => \"#\"}"
-                                        "    %br"))
+                                        "  This is haml"
+                                        "  This is haml"
+                                        "  %a{:href => \"#\"}"
+                                        "  %br"))
 
 (define-emmet-transform-html-test-case Filter-Hiccup
                                        "a|hic"                  ("[:a]")
@@ -434,22 +459,21 @@
                                        "a#q.x[x=y m=l]|hic"      ("[:a#q.x {:x \"y\", :m \"l\"}]")
                                        ".footer|hic"            ("[:div.footer]")
                                        "p>a[href=#]+br|hic"      ("[:p"
-                                                                  "    [:a {:href \"#\"}]"
-                                                                  "    [:br]]")
+                                                                  "  [:a {:href \"#\"}]"
+                                                                  "  [:br]]")
 
                                        "#q>(a*2>b{x})+p>{m}+b|hic"
                                        ("[:div#q"
-                                        "    [:a [:b \"x\"]]"
-                                        "    [:a [:b \"x\"]]"
-                                        "    [:p"
-                                        "        \"m\""
-                                        "        [:b]]]"))
+                                        "  [:a [:b \"x\"]]"
+                                        "  [:a [:b \"x\"]]"
+                                        "  [:p"
+                                        "    \"m\""
+                                        "    [:b]]]"))
 
 (define-emmet-transform-html-test-case Filter-escape
                                        "script[src=&quot;]|e"    ("&lt;script src=\"&amp;quot;\"&gt;&lt;/script&gt;"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; CSS-abbrev tests
+;;;; CSS-abbrev tests.
 
 (define-emmet-unit-test-case CSS-toknize
                              #'emmet-css-toknize
@@ -575,7 +599,8 @@
                                       ("@import url(http://github.com/smihica/index.css);")
                                       )
 
-;; lorem generator test
+;;;; Lorem generator test.
+
 (let ((name "Lorem-generator"))
   (princ
    (if (or (not (string-equal (emmet-lorem-generate 0) ""))
@@ -586,7 +611,8 @@
        (concat "*** [FAIL] | \"" name "\".\n")
      (concat "    [PASS] | \"" name "\" 5 tests.\n"))))
 
-;; Inline tag expansion within HTML/XML markup (regression test)
+;;;; Inline tag expansion within HTML/XML markup (regression test).
+
 (defun emmet-inline-expansion-test (lis)
   "Tests inline expansion of emmet forms nested inside markup."
   (let ((es (car lis))
@@ -604,10 +630,10 @@
                      #'emmet-inline-expansion-test
                      '((("span#test") . "<div><span id=\"test\"></span></div>")))
 
-;; indent
-;; NOTE: Indent uses indent-region by default,
-;;   and inserts spaces based on emmet-indentation
-;;   if emmet-indent-after-insert is nil
+;;;; Indent.
+
+;; NOTE: Indent uses `indent-region' by default, and inserts spaces
+;; based on `emmet-indentation' if `emmet-indent-after-insert' is nil.
 (defun emmet-indent-test (lis)
   (let ((es (car lis))
         (emmet-expand-preview-p nil)
@@ -632,9 +658,10 @@
                        #'emmet-indent-test
                        '((("div>ul>li*3") . "<div>\n  <ul>\n    <li></li>\n    <li></li>\n    <li></li>\n  </ul>\n</div>"))))
 
+;;;; Wrap test.
+
 ;; Old tests for previous indent behavior last seen:
 ;;   commit: f56174e5905a40583b47f9737abee3af8da3faeb
-
 (defun emmet-wrap-with-markup-test (lis)
   (let ((es (car lis))
         (ins (or (elt lis 1) "This is gnarly text with $$$s and <span>markup</span> and end brackets}}s"))
@@ -666,8 +693,8 @@
                      '((("div>ul>li*" "I am some\nmultiline\n  text") .
                         "<div>\n  <ul>\n    <li>I am some</li>\n    <li>multiline</li>\n    <li>  text</li>\n  </ul>\n</div>")))
 
-;; Regression test for #54 (broken emmet-find-left-bound behavior
-;;   after tag with attributes)
+;; Regression test for #54. (broken `emmet-find-left-bound' behavior
+;; after tag with attributes)
 (defun emmet-regression-54-test (lis)
   (let ((es (car lis))
         (emmet-expand-preview-p nil)
@@ -690,6 +717,8 @@
 
 (define-emmet-transform-html-test-case regression-61-bracket-escapes
                                        "div{\\}\\}\\}}" ("<div>}}}</div>"))
+
+;;;; JSX test.
 
 (defun emmet-jsx-expand-test (lis)
   (let ((es (car lis))
@@ -722,7 +751,7 @@
         (tab-width 2)
         (standard-indent 2)
         (emmet-jsx-major-modes '(sgml-mode))
-	(emmet-jsx-className-braces? t))
+	(emmet-jsx-className-braces-p t))
     (with-temp-buffer
       (emmet-mode 1)
       (sgml-mode)
@@ -787,5 +816,12 @@
                        #'emmet-self-closing-tag-style-test
                        '((("meta") . "<meta>"))))
 
-;; start
+;; Start.
 (emmet-test-cases)
+
+(provide 'emmet-tests)
+;; Local Variables:
+;; indent-tabs-mode: nil
+;; autoload-compute-prefixes: nil
+;; End:
+;;; emmet-tests.el ends here
