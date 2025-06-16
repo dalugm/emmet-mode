@@ -1,0 +1,23 @@
+* Table of Contents                                            :TOC:noexport:
+- [[#emmet-mode][Emmet mode]]
+  - [[#installation][Installation]]
+
+* Emmet mode
+
+This is a fork of [[https://github.com/rooney/zencoding][zencoding-mode]] to support [[https://emmet.io/][Emmet]]'s feature set.
+
+** Installation
+
+*** use-pacakge
+
+#+begin_src emacs-lisp
+(use-package emmet-mode
+  :vc (:url "https://github.com/dalugm/emmet-mode" :rev :newest))
+#+end_src
+
+*** Manual Installation
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "path/to/emmet-mode")
+(require 'emmet-mode)
+#+end_src

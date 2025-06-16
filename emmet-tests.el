@@ -98,17 +98,17 @@
                                        "#q.x.y.z"               ("<div id=\"q\" class=\"x y z\"></div>"))
 
 (define-emmet-transform-html-test-case Empty-tags
-                                       "a/"                     ("<a href=\"\"/>")
-                                       "a/.x"                   ("<a class=\"x\" href=\"\"/>")
-                                       "a/#q.x"                 ("<a id=\"q\" class=\"x\" href=\"\"/>")
-                                       "a/#q.x.y.z"             ("<a id=\"q\" class=\"x y z\" href=\"\"/>"))
+                                       "a/"                     ("<a href=\"\" />")
+                                       "a/.x"                   ("<a class=\"x\" href=\"\" />")
+                                       "a/#q.x"                 ("<a id=\"q\" class=\"x\" href=\"\" />")
+                                       "a/#q.x.y.z"             ("<a id=\"q\" class=\"x y z\" href=\"\" />"))
 
 (define-emmet-transform-html-test-case Self-closing-tags
-                                       "input type=text"        ("<input name=\"\" type=\"text\" value=\"\"/>")
-                                       "img"                    ("<img alt=\"\" src=\"\"/>")
+                                       "input type=text"        ("<input name=\"\" type=\"text\" value=\"\" />")
+                                       "img"                    ("<img alt=\"\" src=\"\" />")
                                        "img>metadata/*2"        ("<img alt=\"\" src=\"\">"
-                                                                 "  <metadata/>"
-                                                                 "  <metadata/>"
+                                                                 "  <metadata />"
+                                                                 "  <metadata />"
                                                                  "</img>"))
 
 (define-emmet-transform-html-test-case Siblings
@@ -210,8 +210,8 @@
                                        "a*1"                    ("<a href=\"\"></a>")
                                        "a*2"                    ("<a href=\"\"></a>"
                                                                  "<a href=\"\"></a>")
-                                       "a/*2"                   ("<a href=\"\"/>"
-                                                                 "<a href=\"\"/>")
+                                       "a/*2"                   ("<a href=\"\" />"
+                                                                 "<a href=\"\" />")
                                        "a*2+b*2"                ("<a href=\"\"></a>"
                                                                  "<a href=\"\"></a>"
                                                                  "<b></b>"
@@ -233,8 +233,8 @@
                                                                  "  <b id=\"q\" class=\"x\"></b>"
                                                                  "</a>")
                                        "a#q.x>b/#q.x*2"         ("<a id=\"q\" class=\"x\" href=\"\">"
-                                                                 "  <b id=\"q\" class=\"x\"/>"
-                                                                 "  <b id=\"q\" class=\"x\"/>"
+                                                                 "  <b id=\"q\" class=\"x\" />"
+                                                                 "  <b id=\"q\" class=\"x\" />"
                                                                  "</a>"))
 
 (define-emmet-transform-html-test-case Numbering
@@ -285,9 +285,9 @@
                                         "</div>")
 
                                        "a:b$$$-c$$@-:d$@-3-e$$@100/#b.c$*3"
-                                       ("<a:b001-c03:d5-e100 id=\"b\" class=\"c1\"/>"
-                                        "<a:b002-c02:d4-e101 id=\"b\" class=\"c2\"/>"
-                                        "<a:b003-c01:d3-e102 id=\"b\" class=\"c3\"/>")
+                                       ("<a:b001-c03:d5-e100 id=\"b\" class=\"c1\" />"
+                                        "<a:b002-c02:d4-e101 id=\"b\" class=\"c2\" />"
+                                        "<a:b003-c01:d3-e102 id=\"b\" class=\"c3\" />")
 
                                        "ul>li.item${name: item$ price: $\\$}*3"
                                        ("<ul>"
@@ -317,11 +317,11 @@
                                        "a[x. m.]"                ("<a href=\"\" x m></a>")
                                        "a[x= m=\"\"]"            ("<a href=\"\" x=\"\" m=\"\"></a>")
                                        "a[x=y m=l]"              ("<a href=\"\" x=\"y\" m=\"l\"></a>")
-                                       "a/[x=y m=l]"             ("<a href=\"\" x=\"y\" m=\"l\"/>")
+                                       "a/[x=y m=l]"             ("<a href=\"\" x=\"y\" m=\"l\" />")
                                        "a#foo[x=y m=l]"          ("<a id=\"foo\" href=\"\" x=\"y\" m=\"l\"></a>")
                                        "a.foo[x=y m=l]"          ("<a class=\"foo\" href=\"\" x=\"y\" m=\"l\"></a>")
                                        "a#foo.bar.mu[x=y m=l]"   ("<a id=\"foo\" class=\"bar mu\" href=\"\" x=\"y\" m=\"l\"></a>")
-                                       "a/#foo.bar.mu[x=y m=l]"  ("<a id=\"foo\" class=\"bar mu\" href=\"\" x=\"y\" m=\"l\"/>")
+                                       "a/#foo.bar.mu[x=y m=l]"  ("<a id=\"foo\" class=\"bar mu\" href=\"\" x=\"y\" m=\"l\" />")
                                        "a[x=y]+b"                ("<a href=\"\" x=\"y\"></a>"
                                                                   "<b></b>")
                                        "a[x=y]+b[x=y]"            ("<a href=\"\" x=\"y\"></a>"
@@ -796,23 +796,18 @@
       (emmet-expand-line nil)
       (buffer-string))))
 
-;; By default, `emmet-self-closing-tag-style' must not break any test code.
-(emmet-run-test-case "Self closing tag style 1"
-                     #'emmet-self-closing-tag-style-test
-                     '((("meta") . "<meta/>")))
-
 (let ((emmet-self-closing-tag-style "/"))
-  (emmet-run-test-case "Self closing tag style 2"
+  (emmet-run-test-case "Self closing tag style 1"
                        #'emmet-self-closing-tag-style-test
                        '((("meta") . "<meta/>"))))
 
 (let ((emmet-self-closing-tag-style " /"))
-  (emmet-run-test-case "Self closing tag style 3"
+  (emmet-run-test-case "Self closing tag style 2"
                        #'emmet-self-closing-tag-style-test
                        '((("meta") . "<meta />"))))
 
 (let ((emmet-self-closing-tag-style ""))
-  (emmet-run-test-case "Self closing tag style 4"
+  (emmet-run-test-case "Self closing tag style 3"
                        #'emmet-self-closing-tag-style-test
                        '((("meta") . "<meta>"))))
 
